@@ -1,0 +1,1 @@
+char * formatage_mot(char * chaine);

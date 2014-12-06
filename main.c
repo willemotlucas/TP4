@@ -6,7 +6,13 @@
 #include <stdlib.h>
 
 int main()
-{
-	printf("hello world\n");
+{	
+	ArbreABR * arbre = creer_abr();
+	NoeudABR * noeud1 = creer_noeud("Hopital");
+	NoeudABR * noeud2 = creer_noeud("armoIre");
+	NoeudABR * noeud3 = creer_noeud("zoo");
+
+	printf("Hello World !\n");
+
 	return 0;
 }
