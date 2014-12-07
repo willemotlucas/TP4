@@ -1,3 +1,4 @@
+#include "liste.h"
 #include "arbre.h"
 #include "outils.h"
 #include "pile.h"
@@ -20,14 +21,14 @@ ArbreABR * creer_abr()
 	return abr;
 }
 
-NoeudABR * creer_noeud(char * mot)
+NoeudABR * creer_noeud(char * mot, ListePosition * listeP)
 {
 	NoeudABR * noeud = malloc(sizeof(NoeudABR));
 
 	if(noeud != NULL)
 	{
 		noeud->mot = formatage_mot(mot);
-		noeud->positions = NULL;
+		noeud->positions = listeP;
 		noeud->filsGauche = NULL;
 		noeud->filsDroit = NULL;
 	}
@@ -84,14 +85,14 @@ int ajouter_noeud(ArbreABR * arbre, NoeudABR * noeud)
 			else if(strcmp(noeud->mot, pere->mot) < 0)
 			{
 				pere->filsGauche = noeud;
-				arbre->nb_mots_differents;
+				arbre->nb_mots_differents++;
 			}
 
 			else
 			{
 				//Le mot à ajouter existe déjà
 				//Il faut mettre à jour sa liste position en ajoutant la position actuelle	
-				printf("cas non défini\n");
+				ajouter_position(pere->positions, noeud->positions->debut->numero_ligne, noeud->positions->debut->ordre, noeud->positions->debut->numero_phrase);
 			}
 
 			arbre->nb_mots_total++;
@@ -119,7 +120,9 @@ void afficher_arbre(ArbreABR * arbre)
 		}
 
 		racine = depiler(p);
-		printf("%s\n", racine->mot);
+		printf("%s ", racine->mot);
+		afficher_positions(racine->positions);
+		printf("\n");
 		racine = racine->filsDroit;
 	}
 }

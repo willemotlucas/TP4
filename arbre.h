@@ -19,7 +19,7 @@ typedef struct arbreABR ArbreABR;
 
 ArbreABR * creer_abr();
 
-NoeudABR * creer_noeud();
+NoeudABR * creer_noeud(char * mot, ListePosition * listeP);
 
 int ajouter_noeud(ArbreABR * arbre, NoeudABR * noeud);
 
