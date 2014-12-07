@@ -1,4 +1,5 @@
 #include "arbre.h"
+#include "outils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
