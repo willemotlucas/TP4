@@ -1,5 +1,6 @@
 #include "arbre.h"
 #include "outils.h"
+#include "pile.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,9 +26,7 @@ NoeudABR * creer_noeud(char * mot)
 
 	if(noeud != NULL)
 	{
-		char * motmin = formatage_mot(mot);
-		noeud->mot = malloc(strlen(motmin) + 1 * sizeof(char));
-		strcpy(noeud->mot, motmin);
+		noeud->mot = formatage_mot(mot);
 		noeud->positions = NULL;
 		noeud->filsGauche = NULL;
 		noeud->filsDroit = NULL;
@@ -38,50 +37,89 @@ NoeudABR * creer_noeud(char * mot)
 
 int ajouter_noeud(ArbreABR * arbre, NoeudABR * noeud)
 {
+	//Si l'arbre est vide
 	if(arbre->racine == NULL)
 	{
 		arbre->racine = noeud;
 	}
 
-	NoeudABR * racine = arbre->racine;
-	NoeudABR * pere = arbre->racine;
-	
-	while(racine != NULL)
+	//Si l'arbre contient des éléments
+	else
 	{
-		pere = racine;
 
-		if(strcmp(noeud->mot, racine->mot) > 0)
+		NoeudABR * racine = arbre->racine;
+		NoeudABR * pere = arbre->racine;
+		
+		while(racine != NULL)
 		{
-			racine = racine->filsDroit;
-		}
-		else if(strcmp(noeud->mot, racine->mot) < 0)
-		{
-			racine = racine->filsGauche;
-		}
-	}
+			pere = racine;
 
-	if(pere != NULL)
-	{
-		if(strcmp(noeud->mot, racine->mot) > 0)
-		{
-			pere->filsDroit = noeud;
-			arbre->nb_mots_differents++;
+			if(strcmp(noeud->mot, racine->mot) > 0)
+			{
+				if(racine->filsDroit != NULL)
+					racine = racine->filsDroit;
+				else
+					racine = NULL;
+			}
+			else if(strcmp(noeud->mot, racine->mot) < 0)
+			{
+				if(racine->filsGauche != NULL)
+					racine = racine->filsGauche;
+				else
+					racine = NULL;
+			}
+			else
+				break;
 		}
-		else if(strcmp(noeud->mot, racine->mot) < 0)
+
+
+		if(pere != NULL)
 		{
-			pere->filsGauche = noeud;
-			arbre->nb_mots_differents;
+			if(strcmp(noeud->mot, pere->mot) > 0)
+			{
+				pere->filsDroit = noeud;
+				arbre->nb_mots_differents++;
+			}
+
+			else if(strcmp(noeud->mot, pere->mot) < 0)
+			{
+				pere->filsGauche = noeud;
+				arbre->nb_mots_differents;
+			}
+
+			else
+			{
+				//Le mot à ajouter existe déjà
+				//Il faut mettre à jour sa liste position en ajoutant la position actuelle	
+				printf("cas non défini\n");
+			}
+
+			arbre->nb_mots_total++;
+
+			return 1;
 		}
 		else
+			return 0;
+	}
+}
+
+void afficher_arbre(ArbreABR * arbre)
+{
+	//Ici on choisit d'effectuer un parcours de type infixe pour 
+	//afficher les mots par ordre alphabétique
+	NoeudABR * racine = arbre->racine;
+	Pile * p = creer_pile();
+
+	while(racine != NULL || pile_vide(p) == 0)
+	{
+		while(racine != NULL)
 		{
-			//Le mot à ajouter existe déjà
-			//Il faut mettre à jour sa liste position en ajoutant la position actuelle	
+			empiler(p,racine);
+			racine = racine->filsGauche;
 		}
 
-		arbre->nb_mots_total++;
-
-		return 1;
+		racine = depiler(p);
+		printf("%s\n", racine->mot);
+		racine = racine->filsDroit;
 	}
-	else
-		return 0;
 }
