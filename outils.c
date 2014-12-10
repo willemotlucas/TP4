@@ -33,65 +33,79 @@ char * formatage_mot(char * chaine)
 int charger_fichier(ArbreABR * arbre, char * filename)
 {
 	FILE * fichier = NULL;
-	
+
 	char ligne[TAILLE_LIGNE] = "";
 	char mot[TAILLE_MOT] = "";
-	char curseur;
-	
-	int position_curseur = 0;
-	int nbmot = 0;
-	int num_ligne = 1;
-	int ordre = 1;
-	int num_phrase = 1;
-	int i = 0;
 
 	fichier = fopen(filename, "r");
 
+	char c = '\0'; //caractère lu par le curseur
+	int i = 0; //curseur qui parcourt toute une ligne
+	int j = 0; //curseur d'un mot
+	int k = 0; //pour la remise à zero de mot[]
+
+	int ordre = 1; //compteur de position dans une phrase
+	int num_ligne = 1; //numéro de la ligne lu
+	int num_phrase = 1; //numéro de la phrase lu
+	int nbmot = 1; 
+
 	if(fichier != NULL)
 	{
+		//On isole les lignes une par une
 		while(fgets(ligne, TAILLE_LIGNE, fichier) != NULL)
 		{
-			while(ligne[position_curseur] != '\n')
+			//Puis on lit chaque caractère de cette ligne
+			for(i = 0; i < strlen(ligne); i++)
 			{
-				while(ligne[position_curseur] != ' ' && ligne[position_curseur] != '.')
+				c = ligne[i];
+
+				//Si le caractère lu est un point, on change de phrase
+				if(c == '.')
 				{
-					mot[i] = ligne[position_curseur];
-					i++;
-					position_curseur++;
-				}
-
-				nbmot ++;
-				// ListePosition * listeP = creer_liste_positions();
-				// ajouter_position(listeP, num_ligne, ordre, num_phrase);
-				// NoeudABR * n = creer_noeud(mot, listeP);
-				// ajouter_noeud(arbre, n);
-
-				printf("%s ", mot);
-
-				if(ligne[position_curseur] == '.')
-				{
-					printf(".");
 					num_phrase++;
 				}
 
-				for(i = 0; i < TAILLE_MOT; i++)
+				//Si le caractère lu n'est ni un point ni un espace
+				//Alors on est toujours en train de parcourir un 
+				//même mot que l'on enregistre
+				if(c != ' ' && c != '.')
 				{
-					mot[i] = '\0';
+					mot[j] = c;
+					j++;
 				}
 
-				i = 0;
-				position_curseur++;
-				ordre++;
+				//Si le caractere est un . ou un ' ' alors on change de mot
+				//On enregistre la position du mot qu'on vient de lire
+				//On créé le noeud avec le mot + sa position
+				//On ajoute le noeud dans l'arbre
+				else
+				{
+					
+					// printf("mot lu = %s | num_ligne = %d, ordre = %d, num_phrase = %d\n", mot, num_ligne, ordre, num_phrase);
+					
+					ListePosition * listeP = creer_liste_positions();
+					ajouter_position(listeP, num_ligne, ordre, num_phrase);
+					NoeudABR * n = creer_noeud(mot, listeP);
+					ajouter_noeud(arbre, n);
+
+					//On remet à zéo le tableau qui sert à stocker
+					//le mot qui est lu
+					for(k = 0; k < TAILLE_MOT; k++)
+						mot[k] = '\0';
+					
+					j = 0;
+					ordre++;
+					nbmot++;
+				}
+				
 			}
 
-			i = 0;
 			num_ligne++;
-			position_curseur = 0;
-			printf("\n");
+			ordre = 1;
 		}
 
-		fclose(fichier);
+		return nbmot+1;
 	}
 
-	return nbmot;
+	return 0;
 }

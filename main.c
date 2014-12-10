@@ -10,7 +10,8 @@ int main()
 {	
 	ArbreABR * arbre = creer_abr();
 
-	charger_fichier(arbre, "test.txt");
+	printf("Nombre de mot du fichier : %d\n", charger_fichier(arbre, "test.txt"));
+	afficher_arbre(arbre);
 
 	/*ListePosition * listeP1 = creer_liste_positions();
 	ListePosition * listeP2 = creer_liste_positions();
