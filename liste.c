@@ -69,15 +69,20 @@ void afficher_positions(ListePosition * listeP)
 
 		if(listeP->nb_elements == 1)
 		{
-			printf("position : ligne %d, ordre %d, phrase num %d\n", p->numero_ligne, p->ordre, p->numero_phrase);
+			printf("%-10d|", p->numero_ligne);
+			printf("%-10d|", p->ordre);
+			printf("%-10d|", p->numero_phrase);
 		}
 
 		else
 		{
-			printf("positions : ");
 			do
 			{
-				printf("ligne %d, ordre %d, phrase num %d\n", p->numero_ligne, p->ordre, p->numero_phrase);
+				printf("%-10d|",p->numero_ligne);
+				printf("%-10d|", p->ordre);
+				printf("%-10d|", p->numero_phrase);
+				printf("\n");
+				printf("%-10s|", "");
 				p = p->suivant;
 			}while(p != NULL);
 		}

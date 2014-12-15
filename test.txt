@@ -1,5 +1,1 @@
-Ce fichier est un fichier de test pour le tp.
-Il convient de le charger dans une fonction puis d'en lire
-tous les caractères un par un pour les stocker dans un arbre
-binaire de recherche. On pourra ensuite rechercher un
-mot specifique et savoir ou il apparait dans le texte.
+Petit et grand zoo pour le test de et.

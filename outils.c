@@ -30,6 +30,11 @@ char * formatage_mot(char * chaine)
 	return NULL;		
 }
 
+int max(int a, int b)
+{
+	return (a > b) ? a : b;
+}
+
 int charger_fichier(ArbreABR * arbre, char * filename)
 {
 	FILE * fichier = NULL;
@@ -47,7 +52,7 @@ int charger_fichier(ArbreABR * arbre, char * filename)
 	int ordre = 1; //compteur de position dans une phrase
 	int num_ligne = 1; //numéro de la ligne lu
 	int num_phrase = 1; //numéro de la phrase lu
-	int nbmot = 1; 
+	int nbmot = 0; 
 
 	if(fichier != NULL)
 	{
@@ -59,17 +64,12 @@ int charger_fichier(ArbreABR * arbre, char * filename)
 			{
 				c = ligne[i];
 
-				//Si le caractère lu est un point, on change de phrase
-				if(c == '.')
-				{
-					num_phrase++;
-				}
-
 				//Si le caractère lu n'est ni un point ni un espace
 				//Alors on est toujours en train de parcourir un 
 				//même mot que l'on enregistre
 				if(c != ' ' && c != '.')
 				{
+					// printf("%c", c);
 					mot[j] = c;
 					j++;
 				}
@@ -81,30 +81,39 @@ int charger_fichier(ArbreABR * arbre, char * filename)
 				else
 				{
 					
-					// printf("mot lu = %s | num_ligne = %d, ordre = %d, num_phrase = %d\n", mot, num_ligne, ordre, num_phrase);
-					
+					// printf("mot ajouté : %s\n", mot);
 					ListePosition * listeP = creer_liste_positions();
-					ajouter_position(listeP, num_ligne, ordre, num_phrase);
-					NoeudABR * n = creer_noeud(mot, listeP);
-					ajouter_noeud(arbre, n);
+					if(ajouter_position(listeP, num_ligne, ordre, num_phrase))
+					{
+						NoeudABR * n = creer_noeud(mot, listeP);
+						if(ajouter_noeud(arbre, n));
+						{
+							//On remet à zéro le tableau qui sert à stocker
+							//le mot qui est lu
+							for(k = 0; k < TAILLE_MOT; k++)
+								mot[k] = '\0';
+							
+							j = 0;
+							ordre++;
+							nbmot++;
+						}
+					}
 
-					//On remet à zéo le tableau qui sert à stocker
-					//le mot qui est lu
-					for(k = 0; k < TAILLE_MOT; k++)
-						mot[k] = '\0';
-					
-					j = 0;
-					ordre++;
-					nbmot++;
 				}
-				
+
+				//Si le caractère lu est un point, on change de phrase
+				if(c == '.')
+				{
+					// printf(".");
+					num_phrase++;
+				}
 			}
 
 			num_ligne++;
 			ordre = 1;
 		}
 
-		return nbmot+1;
+		return nbmot;
 	}
 
 	return 0;

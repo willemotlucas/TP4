@@ -10,8 +10,22 @@ int main()
 {	
 	ArbreABR * arbre = creer_abr();
 
-	printf("Nombre de mot du fichier : %d\n", charger_fichier(arbre, "test.txt"));
+	printf("Nombre de mots lus : %d\n", charger_fichier(arbre, "test.txt"));
+	printf("Nombre de noeud l'arbre : %d\n", arbre->nb_mots_differents);
+	printf("profondeur de l'arbre : %d\n", profondeur(arbre->racine));
+	if(equilibre(arbre->racine))
+		printf("L'arbre est équilibré !\n");
+	else
+		printf("L'arbre n'est pas équilibré ...\n");
+
 	afficher_arbre(arbre);
+
+	NoeudABR * recherche = rechercher_noeud(arbre, "petit");
+	if(recherche != NULL)
+		printf("On a trouve : %s\n", recherche->mot);
+	else
+		printf("On a pas trouvé le mot cherché ...\n");
+
 
 	/*ListePosition * listeP1 = creer_liste_positions();
 	ListePosition * listeP2 = creer_liste_positions();
