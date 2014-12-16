@@ -67,7 +67,7 @@ int charger_fichier(ArbreABR * arbre, char * filename)
 				//Si le caractère lu n'est ni un point ni un espace
 				//Alors on est toujours en train de parcourir un 
 				//même mot que l'on enregistre
-				if(c != ' ' && c != '.')
+				if(c != ' ' && c != '.' && c != '\n') 
 				{
 					// printf("%c", c);
 					mot[j] = c;
@@ -78,7 +78,7 @@ int charger_fichier(ArbreABR * arbre, char * filename)
 				//On enregistre la position du mot qu'on vient de lire
 				//On créé le noeud avec le mot + sa position
 				//On ajoute le noeud dans l'arbre
-				else
+				else if(c != '\n')
 				{
 					
 					// printf("mot ajouté : %s\n", mot);

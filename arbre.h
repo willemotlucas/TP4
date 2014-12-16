@@ -29,3 +29,6 @@ NoeudABR * rechercher_noeud(ArbreABR * arbre, char * mot);
 
 void afficher_arbre(ArbreABR * arbre);
 
+int profondeur(NoeudABR * racine);
+
+int equilibre(NoeudABR * racine);

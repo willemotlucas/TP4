@@ -78,7 +78,7 @@ void afficher_positions(ListePosition * listeP)
 		{
 			do
 			{
-				printf("%-10d|",p->numero_ligne);
+				printf("%-10d|", p->numero_ligne);
 				printf("%-10d|", p->ordre);
 				printf("%-10d|", p->numero_phrase);
 				printf("\n");

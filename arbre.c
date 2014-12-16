@@ -43,6 +43,9 @@ int ajouter_noeud(ArbreABR * arbre, NoeudABR * noeud)
 	{
 		arbre->racine = noeud;
 		arbre->nb_mots_differents++;
+		arbre->nb_mots_total++;
+
+		return 1;
 	}
 
 	//Si l'arbre contient des éléments
@@ -112,11 +115,12 @@ void afficher_arbre(ArbreABR * arbre)
 	NoeudABR * racine = arbre->racine;
 	Pile * p = creer_pile();
 
-	printf("==========================================\n");
+	printf("============================================\n");
 	printf("%-10s","Mot");
 	printf("%-10s","| Ligne");
 	printf("%-10s","| Ordre");
-	printf("%-10s","| Numéro phrase |\n");
+	printf("%-10s","| Num. phrase |\n");
+	printf("============================================\n");
 
 	while(racine != NULL || pile_vide(p) == 0)
 	{
@@ -138,15 +142,28 @@ void afficher_arbre(ArbreABR * arbre)
 NoeudABR * rechercher_noeud(ArbreABR * arbre, char * mot)
 {
 	NoeudABR * tmp = arbre->racine;
-	while(tmp != NULL && strcmp(tmp->mot, mot) != 0)
+	while(tmp->filsGauche != NULL || tmp->filsDroit != NULL)
 	{
 		if(tmp->filsGauche != NULL && strcmp(tmp->mot, mot) > 0)
 			tmp = tmp->filsGauche;
+		
+		else if(tmp->filsDroit == NULL && strcmp(tmp->mot, mot) < 0)
+			break;
+		
+		else if(tmp->filsGauche == NULL && strcmp(tmp->mot, mot) > 0)
+			break;
+		
 		else if(tmp->filsDroit != NULL && strcmp(tmp->mot, mot) < 0)
 			tmp = tmp->filsDroit;
+		
+		else if(strcmp(tmp->mot, mot) == 0)
+			break;
 	}
 
-	return tmp;
+	if(strcmp(tmp->mot, mot) == 0)
+		return tmp;
+	else
+		return NULL;
 }
 
 int profondeur(NoeudABR * racine)
@@ -167,29 +184,39 @@ int profondeur(NoeudABR * racine)
 int equilibre(NoeudABR * racine)
 {
 	if(racine->filsGauche == NULL && racine->filsDroit == NULL)
+	{
 		return 1;
+	}
 
 	else if(racine->filsGauche == NULL && racine->filsDroit != NULL)
 	{
-		if(profondeur(racine->filsDroit) > 1)
+		if(profondeur(racine->filsDroit) > 0)
+		{
 			return 0;
+		}
 		else
+		{
 			return 1;
+		}
 	}
 
 	else if(racine->filsGauche != NULL && racine->filsDroit == NULL)
 	{
-		if(profondeur(racine->filsGauche) > 1)
+		if(profondeur(racine->filsGauche) > 0)
+		{
 			return 0;
+		}
 		else
+		{
 			return 1;
+		}
 	}
 
-	else if(profondeur(racine->filsDroit)-profondeur(racine->filsGauche) <= 1 || profondeur(racine->filsDroit)-profondeur(racine->filsGauche) >= -1)
+	else if(equilibre(racine->filsDroit) && equilibre(racine->filsGauche))
 	{
-		equilibre(racine->filsDroit);
-		equilibre(racine->filsGauche);
+		return 1;
 	}
+
 	else
 	{
 		return 0;
