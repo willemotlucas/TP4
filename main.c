@@ -11,8 +11,14 @@
 int main()
 {	
 	int choix = -1;
+
+	char * filename = "test.txt";
 	int fichier_charge = 0;
-	char * mot_a_chercher = "test";
+
+	char mot_a_chercher1[TAILLE_MOT];
+	char mot_a_chercher2[TAILLE_MOT];
+	char mot_a_chercher3[TAILLE_MOT];
+
 	NoeudABR * noeud_trouve = NULL;
 	ArbreABR * arbre = NULL;
 	
@@ -29,6 +35,7 @@ int main()
 		printf("3. Caractéristique de l'ABR\n");
 		printf("4. Afficher les mots\n");
 		printf("5. Rechercher un mot\n");
+		printf("6. Rechercher une phrase contenant 2 mots\n");
 		printf("7. Quitter\n\n");
 		printf("Votre choix : ");
 		scanf("%d", &choix);
@@ -49,7 +56,7 @@ int main()
 			if(arbre != NULL)
 			{
 				fichier_charge = 1;
-				printf("Le fichier a été chargé avec succès.\n %d mots on été lus.\n", charger_fichier(arbre, "test3.txt"));
+				printf("Le fichier a été chargé avec succès.\n %d mots on été lus.\n", charger_fichier(arbre, filename));
 			}
 			else
 				printf("Vous devez d'abord créer l'ABR.\n");
@@ -82,10 +89,10 @@ int main()
 			case 5:
 			if(arbre != NULL && fichier_charge == 1)
 			{
-				// printf("Entrez le mot à chercher : ");
-				// fgets(mot_a_chercher, 1000, stdin);
-				printf("Le mot à chercher est : \"%s\"\n", mot_a_chercher);
-				noeud_trouve = rechercher_noeud(arbre, mot_a_chercher);
+				printf("Entrez le mot à chercher : ");
+				scanf("%s", mot_a_chercher1);
+				printf("Le mot à chercher est : \"%s\"\n", mot_a_chercher1);
+				noeud_trouve = rechercher_noeud(arbre, mot_a_chercher1);
 				if(noeud_trouve != NULL)
 				{
 					printf("============================================\n");
@@ -97,18 +104,28 @@ int main()
 					printf("%-10s|", noeud_trouve->mot);
 					afficher_positions(noeud_trouve->positions);
 					printf("\n============================================\n");
-					// printf("Le mot \"%s\" se trouve à la ligne %d, ordre %d et phrase %d.", noeud_trouve->mot, noeud_trouve->positions->debut->numero_ligne, noeud_trouve->positions->debut->ordre, noeud_trouve->positions->debut->numero_phrase);
 				}
 				else
-					printf("Le mot \"%s\" n'est pas dans le texte.", mot_a_chercher);
+					printf("Le mot \"%s\" n'est pas dans le texte.", mot_a_chercher1);
 			}
 			else
 				printf("Vous devez d'abord créer l'ABR et charger le fichier.\n");
 			break;
 
+			case 6:
+				printf("Entrez le premier mot à chercher : ");
+				scanf("%s", mot_a_chercher2);
+				printf("Entrez le deuxième mot à chercher : ");
+				scanf("%s", mot_a_chercher3);
+				printf("On cherche les phrases contenant \"%s\" et \"%s\"\n\n", mot_a_chercher2, mot_a_chercher3);
+				afficher_phrases(filename, mot_a_chercher2, mot_a_chercher3);
+			break;
+
 			case 7:
 			if(arbre != NULL)
 			{
+				int * noeud_liberes = 0;
+				liberer_memoire(arbre->racine);
 				free(arbre);
 			}
 		}

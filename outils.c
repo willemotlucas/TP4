@@ -69,10 +69,10 @@ int charger_fichier(ArbreABR * arbre, char * filename)
 				//même mot que l'on enregistre
 				if(c != ' ' && c != '.' && c != '\n') 
 				{
-					// printf("%c", c);
 					mot[j] = c;
 					j++;
 				}
+
 
 				//Si le caractere est un . ou un ' ' alors on change de mot
 				//On enregistre la position du mot qu'on vient de lire
@@ -80,31 +80,30 @@ int charger_fichier(ArbreABR * arbre, char * filename)
 				//On ajoute le noeud dans l'arbre
 				else if(c != '\n')
 				{
-					
-					// printf("mot ajouté : %s\n", mot);
-					ListePosition * listeP = creer_liste_positions();
-					if(ajouter_position(listeP, num_ligne, ordre, num_phrase))
+					if(strlen(mot) > 0)
 					{
-						NoeudABR * n = creer_noeud(mot, listeP);
-						if(ajouter_noeud(arbre, n));
+						ListePosition * listeP = creer_liste_positions();
+						if(ajouter_position(listeP, num_ligne, ordre, num_phrase))
 						{
-							//On remet à zéro le tableau qui sert à stocker
-							//le mot qui est lu
-							for(k = 0; k < TAILLE_MOT; k++)
-								mot[k] = '\0';
-							
-							j = 0;
-							ordre++;
-							nbmot++;
+							NoeudABR * n = creer_noeud(mot, listeP);
+							if(ajouter_noeud(arbre, n));
+							{
+								//On remet à zéro le tableau qui sert à stocker
+								//le mot qui est lu
+								for(k = 0; k < TAILLE_MOT; k++)
+									mot[k] = '\0';
+								
+								j = 0;
+								ordre++;
+								nbmot++;
+							}
 						}
 					}
-
 				}
 
 				//Si le caractère lu est un point, on change de phrase
 				if(c == '.')
 				{
-					// printf(".");
 					num_phrase++;
 				}
 			}
@@ -117,4 +116,41 @@ int charger_fichier(ArbreABR * arbre, char * filename)
 	}
 
 	return 0;
+}
+
+void afficher_phrases(char * filename, char * mot1, char * mot2)
+{
+	FILE * fichier = fopen(filename, "r");
+
+	char phrase[TAILLE_LIGNE] = "";
+
+	char c = '\0'; //caractère lu par le curseur
+	int i = 0; //curseur qui parcourt toute une ligne
+	int k = 0; //pour la remise à zero de mot[]
+
+	if(fichier != NULL)
+	{
+		while(!feof(fichier))
+		{
+			c = fgetc(fichier);
+			phrase[i] = c;
+			i++;
+
+			if(c == '.')
+			{
+				if(strstr(phrase, mot1) != NULL && strstr(phrase, mot2) != NULL)
+				{
+					for(k = 0; k < strlen(phrase); k++)
+					{
+						printf("%c", phrase[k]);
+					}
+					printf("\n");
+				}
+
+				for(k = 0; k < TAILLE_LIGNE; k++)
+					phrase[k] = '\0';
+				i = 0;
+			}		
+		}
+	}
 }

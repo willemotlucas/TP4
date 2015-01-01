@@ -222,3 +222,19 @@ int equilibre(NoeudABR * racine)
 		return 0;
 	}
 }
+
+void liberer_memoire(NoeudABR * racine)
+{
+	if(racine->filsGauche != NULL)
+	{
+		liberer_memoire(racine->filsGauche);
+	}
+
+	if(racine->filsDroit != NULL)
+	{
+		liberer_memoire(racine->filsDroit);
+	}
+
+	printf("noeud libere = %s\n", racine->mot);
+	free(racine);
+}
